@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Event Handling Example</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    #taskList { margin-top: 15px; padding: 10px; border: 1px solid #aaa; }
+    li { cursor: pointer; padding: 5px; margin: 3px 0; background: #f2f2f2; }
+    li:hover { background: #e0ffe0; }
+    .highlight { background: yellow; }
+  </style>
+</head>
+<body>
+  <h2>To-Do List (Events Demo)</h2>
+
+  <!-- Add Task Form -->
+  <form id="taskForm">
+    <input type="text" id="taskInput" placeholder="Enter new task">
+    <button type="submit">Add Task</button>
+  </form>
+
+  <!-- Task List -->
+  <div id="taskContainer">
+    <ul id="taskList">
+      <li>Learn JavaScript</li>
+      <li>Practice Events</li>
+    </ul>
+  </div>
+
+  <script>
+    const form = document.getElementById("taskForm");
+    const input = document.getElementById("taskInput");
+    const taskList = document.getElementById("taskList");
+    const taskContainer = document.getElementById("taskContainer");
+
+    // 🔹 Event Listener + Event Object + preventDefault
+    form.addEventListener("submit", function(event) {
+      event.preventDefault(); // stop form refresh
+      let task = input.value.trim();
+      if (task) {
+        let li = document.createElement("li");
+        li.textContent = task;
+        taskList.appendChild(li);
+        input.value = "";
+      }
+    });
+
+    //  Event Delegation (one listener for all <li>)
+    taskList.addEventListener("click", function(event) {
+      if (event.target.tagName === "LI") {
+        alert("You clicked task: " + event.target.textContent);
+        event.target.classList.toggle("highlight"); // toggle highlight
+      }
+    });
+
+    //  Event Bubbling (parent also listens to clicks inside)
+    taskContainer.addEventListener("click", function(event) {
+      console.log("Bubbling reached parent container. Clicked element:", event.target.tagName);
+    });
+
+    //  Example of stopping bubbling
+    taskList.addEventListener("click", function(event) {
+      if (event.target.tagName === "LI" && event.target.textContent === "Practice Events") {
+        alert("Bubbling stopped for this task!");
+        event.stopPropagation(); // stops parent container from logging
+      }
+    });
+  </script>
+</body>
+</html>
